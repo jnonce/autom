@@ -1,7 +1,7 @@
 # Automata
 
-Pattern matching logic application in Haskell.  Similar to Parsec based
-combinators, simplified for educational purpose.
+Pattern matching logic application in Haskell.  This is a learning project
+working with Parsec style combinators and MTL.
 
 The primary types in the system are `MachineT` type and `Stream` typeclass.
 `Stream` is a list-like structure which can provide tokens one by one.
