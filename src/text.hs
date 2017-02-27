@@ -7,6 +7,9 @@ module Text (
 
   space, lower, upper, alpha, alphaNum, digit,
   letter, number,
+
+  asciiDigit,
+  naturalNumber,
   ) where
 
 import qualified Data.Char as C
@@ -68,3 +71,15 @@ letter = satisfies C.isLetter <?> "letter"
 
 -- | Selects Unicode numeric characters, including digits from various scripts, Roman numerals, etc.
 number = satisfies C.isNumber <?> "number"
+
+-- | Parse an ascii digit and return the integral meaning of the digit
+asciiDigit :: (Monad m, Stream s, Char ~ StreamItem s) => MachineT s m Int
+asciiDigit = satisfy $ \item -> lookup item asciiDigits
+  where
+    asciiDigits = ['0'..'9'] `zip` [0..9]
+
+-- | Parse a non-negative integer represented as a stream of digits.
+naturalNumber :: (Monad m, Stream s, Char ~ StreamItem s) => MachineT s m Integer
+naturalNumber = foldl mergeDigit 0 <$> some asciiDigit
+  where
+    mergeDigit soFar digit = (soFar * 10) + toInteger digit

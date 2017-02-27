@@ -18,7 +18,7 @@ main :: IO ()
 main = do
   many $ do
     l <- getLine
-    let rslt = runMachine test1 l
+    let rslt = runMachine naturalNumber l
     case rslt of
       Left err -> print err
       Right (v, b) -> print v >> putStrLn ("left: " ++ b)
