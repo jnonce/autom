@@ -15,7 +15,7 @@ executable autom
   hs-source-dirs:      src
   main-is:             Main.hs
   default-language:    Haskell2010
-  other-modules:       Machine, Stream, Text
+  other-modules:       ByteString, Machine, Stream, Text
   build-depends:       base >= 4.7 && < 5
                      , optparse-applicative >= 0.12
                      , text >= 1.1
