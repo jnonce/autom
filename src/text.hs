@@ -10,10 +10,12 @@ module Text (
 
   asciiDigit,
   naturalNumber,
+  integer
   ) where
 
 import qualified Data.Char as C
 import           Data.Monoid
+import           Data.Maybe (isJust)
 import           Data.Text (Text)
 import qualified Data.Text as T
 import Stream
@@ -78,8 +80,19 @@ asciiDigit = satisfy $ \item -> lookup item asciiDigits
   where
     asciiDigits = ['0'..'9'] `zip` [0..9]
 
+
 -- | Parse a non-negative integer represented as a stream of digits.
 naturalNumber :: (Monad m, Stream s, Char ~ StreamItem s) => MachineT s m Integer
 naturalNumber = foldl mergeDigit 0 <$> some asciiDigit
   where
     mergeDigit soFar digit = (soFar * 10) + toInteger digit
+
+
+-- | Simple decimal integer, allowing for negative values.
+integer :: (Monad m, Stream s, Char ~ StreamItem s) => MachineT s m Integer
+integer = do
+  isNegation <- optional (token '-')
+  num <- naturalNumber
+  return $ if isJust isNegation
+    then negate num
+    else num

@@ -4,7 +4,9 @@ module Stream (
   Stream(..)
   ) where
 
+import qualified Data.ByteString as B
 import qualified Data.Text as T
+import           Data.Word (Word8)
 
 -- | Input stream of tokens
 class Stream s where
@@ -19,3 +21,7 @@ instance Stream [a] where
 instance Stream T.Text where
   type StreamItem T.Text = Char
   uncons = T.uncons
+
+instance Stream B.ByteString where
+  type StreamItem B.ByteString = Word8
+  uncons = B.uncons

@@ -19,5 +19,6 @@ executable autom
   build-depends:       base >= 4.7 && < 5
                      , optparse-applicative >= 0.12
                      , text >= 1.1
+                     , bytestring
                      , mtl
                      , containers

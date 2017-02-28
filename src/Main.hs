@@ -14,12 +14,17 @@ test1 = do
     length <$> sep (token ',') anyToken
     ) <|> return 0
 
+showResult :: Show a => Either MachineFault (a, String) -> IO ()
+showResult (Left err) = print err
+showResult (Right (v, r)) = do
+  print v
+  putStrLn ("Unused:" ++ r)
+
 main :: IO ()
 main = do
   many $ do
     l <- getLine
-    let rslt = runMachine naturalNumber l
-    case rslt of
-      Left err -> print err
-      Right (v, b) -> print v >> putStrLn ("left: " ++ b)
+    -- let rslt = runMachine naturalNumber l
+    let rslt = runMachine (replicateMtoN 3 6 digit) l
+    showResult rslt
   return ()

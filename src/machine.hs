@@ -23,13 +23,17 @@ module Machine (
   terminated,
   terminated1,
 
+  replicateAtMostN,
+  replicateMtoN,
+
    -- Control.Applicative
   Alternative (..),
   optional,
+  replicateM,
+
   ) where
 
 import           Control.Applicative
-import           Control.Monad (unless)
 import           Control.Monad.Except
 import           Control.Monad.Identity
 import           Control.Monad.State
@@ -182,5 +186,23 @@ terminated after item = many (item <* after)
 -- | A sequence of one or more items, each terminated by a given machine
 terminated1 :: (Monad m, Stream s, a ~ StreamItem s) => MachineT s m b -> MachineT s m a -> MachineT s m [a]
 terminated1 after item = some (item <* after)
+
+
+-- | Replicate a machine to parse up to a limited number of matches, stopping
+-- at the first `empty`.
+replicateAtMostN :: (Alternative m) => Int -> m a -> m [a]
+replicateAtMostN n m = replicateAtMostN' n
+  where
+    replicateAtMostN' 0 = pure []
+    replicateAtMostN' n = liftA2 (:) m (replicateAtMostN' (n - 1)) <|> pure []
+
+
+-- | Replicate a machine to parse between some minimum and maximum number of
+-- matches.
+replicateMtoN :: (Monad m, Alternative m) => Int -> Int -> m a -> m [a]
+replicateMtoN l h m = (++) -- Concat a required and an optional part
+  <$> replicateM l m       -- Required l
+  <*> replicateAtMostN (h - l) m     -- Optional, taking us up to h
+
 
 --
