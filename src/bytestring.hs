@@ -9,11 +9,19 @@ module ByteString (
   word32BE,
   word64LE,
   word64BE,
+
+  int16LE,
+  int16BE,
+  int32LE,
+  int32BE,
+  int64LE,
+  int64BE,
   ) where
 
 import           Control.Monad (replicateM)
 import           Data.Bits
 import qualified Data.ByteString as B
+import           Data.Int
 import           Data.Proxy
 import           Data.Word
 import Stream
@@ -53,3 +61,21 @@ word32BE = wordX (undefined :: Word32) foldBE
 word64LE, word64BE :: (Monad m, Stream s, Word8 ~ StreamItem s) => MachineT s m Word64
 word64LE = wordX (undefined :: Word64) foldLE
 word64BE = wordX (undefined :: Word64) foldBE
+
+
+-- | Select a 16 bit signed value, in appropriate byte order
+int16LE, int16BE :: (Monad m, Stream s, Word8 ~ StreamItem s) => MachineT s m Int16
+int16LE = wordX (undefined :: Int16) foldLE
+int16BE = wordX (undefined :: Int16) foldBE
+
+
+-- | Select a 32 bit signed value, in appropriate byte order
+int32LE, int32BE :: (Monad m, Stream s, Word8 ~ StreamItem s) => MachineT s m Int32
+int32LE = wordX (undefined :: Int32) foldLE
+int32BE = wordX (undefined :: Int32) foldBE
+
+
+-- | Select a 64 bit signed value, in appropriate byte order
+int64LE, int64BE :: (Monad m, Stream s, Word8 ~ StreamItem s) => MachineT s m Int64
+int64LE = wordX (undefined :: Int64) foldLE
+int64BE = wordX (undefined :: Int64) foldBE

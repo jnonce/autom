@@ -17,10 +17,7 @@ test1 = do
     length <$> sep (token ',') anyToken
     ) <|> return 0
 
-test2 :: Machine B.ByteString Word32
-test2 = word32BE
-
-arrayB = B.pack [127, 64, 0, 0, 255]
+arrayB = B.pack [127, 64, 0, 128, 255]
 
 showResult :: (Show a, Show r) => Either MachineFault (a, r) -> IO ()
 showResult (Left err) = print err
@@ -34,6 +31,6 @@ main = do
     -- l <- B.getLine
     -- let rslt = runMachine naturalNumber l
     -- let rslt = runMachine (replicateMtoN 3 6 digit) l
-    let rslt = runMachine test2 arrayB
+    let rslt = runMachine int32LE arrayB
     showResult rslt
   return ()
